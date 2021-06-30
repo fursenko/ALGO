@@ -14,28 +14,20 @@ namespace Algo.ImageProcessing
             _image = new byte[N, N];
             var random = new Random();
             int shift = (isDark) ? 0 : (N / 2) + 1;
+            
             for (int i = 0; i < N; i++)
-            {
                 for (int j = 0; j < N - shift; j++)
-                {
                     _image[i, j] = (byte)random.Next(128, 255);
-                }
-            }
         }
 
         public static bool isDark()
         {
             _count = 0;
             for (int i = 0; i < N; ++i)
-            {
                 for (int j = 0; j < N; ++j)
-                {
                     if (_image[j, i] >= 128)
-                    {
                         _count++;
-                    }
-                }
-            }
+            
             return _count > ((N * N) / 2);
         }
 
@@ -43,15 +35,10 @@ namespace Algo.ImageProcessing
         {
             _count = 0;
             for (int i = 0; i < N; ++i)
-            {
                 for (int j = 0; j < N; ++j)
-                {
                     if (_image[i, j] >= 128)
-                    {
                         _count++;
-                    }
-                }
-            }
+            
             return _count > ((N * N) / 2);
         }
 
