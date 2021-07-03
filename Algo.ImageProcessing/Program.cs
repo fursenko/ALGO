@@ -8,12 +8,13 @@ namespace Algo.ImageProcessing
         const int N = 4096;
         static byte[,] _image = new byte[N, N];
         static long _count = 0;
+        static BranchPredictor _branchPredictor;
 
         static void InitImage(bool isDark = false)
         {
             _image = new byte[N, N];
             var random = new Random();
-            int shift = (isDark) ? 0 : (N / 2) + 1;
+            int shift = (isDark) ? 1 : (N / 2) + 1;
             
             for (int i = 0; i < N; i++)
                 for (int j = 0; j < N - shift; j++)
@@ -42,34 +43,27 @@ namespace Algo.ImageProcessing
             return _count > ((N * N) / 2);
         }
 
-        public static bool isDark_OptimizedPlus()
+        public static bool isDark_BranchPredictor()
         {
             _count = 0;
-            int r = N - 1; 
-            int c = r;
-            for (int i = 0; i < N / 2; ++i, --r)
-            {
-                for (int j = 0; j < N / 2; ++j, --c)
-                {
-                    _count += Convert.ToInt32(_image[i, j] >= 128);
-                    _count += Convert.ToInt32(_image[r, c] >= 128);
-                }
-
-                c = N - 1;
-            }
+            _count = _branchPredictor.Count(_image, N);
             return _count > ((N * N) / 2);
-
         }
 
 
         static void Main(string[] args)
         {
             InitImage(true);
+            _branchPredictor = new BranchPredictor();
             var sw = new Stopwatch();
             sw.Start();
-            Console.WriteLine(isDark_OptimizedPlus());
+            Console.WriteLine(isDark_BranchPredictor());
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds);
+
+            //Console.WriteLine($"isDark: {isDark()} _count: {_count}");
+            //Console.WriteLine($"isDark_Optimized: {isDark_Optimized()} _count: {_count}");
+            //Console.WriteLine($"isDark_BranchPredictor: {isDark_BranchPredictor()} _count: {_count}");
         }
     }
 }
