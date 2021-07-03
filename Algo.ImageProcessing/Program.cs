@@ -8,7 +8,9 @@ namespace Algo.ImageProcessing
         const int N = 4096;
         static byte[,] _image = new byte[N, N];
         static long _count = 0;
-        static BranchPredictor _branchPredictor;
+        static int[] _hash = new int[256];
+            
+        //static BranchPredictor _branchPredictor;
 
         static void InitImage(bool isDark = false)
         {
@@ -19,6 +21,9 @@ namespace Algo.ImageProcessing
             for (int i = 0; i < N; i++)
                 for (int j = 0; j < N - shift; j++)
                     _image[i, j] = (byte)random.Next(128, 255);
+
+            for (int i = 128; i <= 255; i++)
+                _hash[i] = 1;
         }
 
         public static bool isDark()
@@ -46,7 +51,15 @@ namespace Algo.ImageProcessing
         public static bool isDark_BranchPredictor()
         {
             _count = 0;
-            _count = _branchPredictor.Count(_image, N);
+            var hash = new int[256];
+            
+            for (int i = 128; i <= 255; i++)
+                hash[i] = 1;
+
+            for (int i = 0; i < N; ++i)
+                for (int j = 0; j < N; ++j)
+                        _count += hash[_image[i, j]];
+
             return _count > ((N * N) / 2);
         }
 
@@ -54,7 +67,6 @@ namespace Algo.ImageProcessing
         static void Main(string[] args)
         {
             InitImage(true);
-            _branchPredictor = new BranchPredictor();
             var sw = new Stopwatch();
             sw.Start();
             Console.WriteLine(isDark_BranchPredictor());
