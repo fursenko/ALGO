@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Algo.BinarySearch
 {
@@ -15,7 +16,6 @@ namespace Algo.BinarySearch
             int start = -1;
             int end = arr.Length;
             int mid = 0;
-
             while (end - start > 1)
             {
                 mid = (end + start) / 2;
